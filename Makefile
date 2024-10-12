@@ -15,3 +15,8 @@ migrate-up:
 
 migrate-down:
 	@go run cmd/migrate/main.go down
+
+.PHONY: build test run migration migrate-up migrate-down
+
+# Add a catch-all rule for migration creation
+%: migration

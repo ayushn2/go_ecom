@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
-
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/ayushn2/go_ecom.git/cmd/api"
 	"github.com/ayushn2/go_ecom.git/config"
 	db "github.com/ayushn2/go_ecom.git/db"
