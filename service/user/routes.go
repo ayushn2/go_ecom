@@ -3,7 +3,6 @@ package user
 import (
 	"fmt"
 	"net/http"
-
 	"github.com/ayushn2/go_ecom.git/service/auth"
 	"github.com/ayushn2/go_ecom.git/types"
 	"github.com/ayushn2/go_ecom.git/utils"
@@ -29,6 +28,8 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request){
 
 }
 
+var userIDCounter = 1
+
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request){
 	// get json payload
 	var payload types.RegisterUserPayload
@@ -39,9 +40,9 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request){
 
 	// Verify the payload
 	if err := utils.Validate.Struct(payload); err != nil{
-		errors := err.(validator.ValidationErrors)
-		utils.WriteError(w,http.StatusBadRequest,fmt.Errorf("invalid payload %v",errors))
-		return
+		errors := err.(validator.ValidationErrors)  
+		utils.WriteError(w,http.StatusBadRequest,fmt.Errorf("invalid payload %v",errors))  
+		return	
 	}
 
 	// Check if the user exists
@@ -49,18 +50,19 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request){
 	if err == nil{
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user with email %s already exists", payload.Email))
 		return 
-	}
+	}		
 
 	hashedPassword,err := auth.HashPassword(payload.Password)
-	if err != nil{
-		utils.WriteError(w, http.StatusInternalServerError,err)
+	if err != nil{  
+		utils.WriteError(w, http.StatusInternalServerError,err)  
 		return 
 	}
+
 	// if it doesn't we create the new user 
-	err = h.store.CreateUser(types.User{
-		FirstName: payload.FirstName,
-		LastName: payload.LastName,
-		Email : payload.Email,
+	err = h.store.CreateUser(types.User{         
+		FirstName : payload.FirstName,               
+		LastName : payload.LastName,               
+		Email : payload.Email,          
 		Password : hashedPassword,
 	})
 
